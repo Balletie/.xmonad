@@ -3,7 +3,7 @@ import qualified XMonad.StackSet as W
 import XMonad.Actions.UpdatePointer
 import XMonad.Actions.Submap
 import XMonad.Actions.WindowGo
-import XMonad.Config.Xfce
+import XMonad.Config.Desktop
 import XMonad.Hooks.DynamicLog
 import XMonad.Hooks.EwmhDesktops hiding (fullscreenEventHook)
 import XMonad.Hooks.ManageDocks
@@ -24,7 +24,7 @@ main :: IO()
 main = do
   xmonad myConfig
 
-boilerPlateConfig = xfceConfig
+boilerPlateConfig = desktopConfig
 
 myTheme = theme smallClean
 
