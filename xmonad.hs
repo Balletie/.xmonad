@@ -77,26 +77,34 @@ myStartupHook = do
   spawn "compton"
   spawn "redshift-gtk -l 51.913799:4.468502 -t 6500:2500"
 
-myKeys config@(XConfig { modMask = mod }) = additionalKeys <> defaultKeys
-  where defaultKeys = keys boilerPlateConfig $ config
-        additionalKeys = M.fromList $
-          [ ((noModMask, xK_Print)      , spawn "scrot -e 'mv $f ~/Desktop'")
-          , ((controlMask, xK_F12)      , spawn "xmonad --recompile && xmonad --restart && tput bel")
+myKeys = additionalKeys <> keys boilerPlateConfig
+additionalKeys config@(XConfig { modMask = mod }) = M.fromList $
+  [ ((noModMask, xK_Print)      , spawn "scrot -e 'mv $f ~/Desktop'")
+  , ((controlMask, xK_F12)      , spawn "xmonad --recompile && xmonad --restart && tput bel")
 
-          -- These use boringWindows to skip over e.g. tabs when switching
-          , ((mod, xK_k)                , focusUp)
-          , ((mod, xK_j)                , focusDown)
+  -- dmenu commands
+  , ((mod, xK_p)                , spawn "dmenu_run -p 'Run:' -nb '#cccccc' -sb '#dddddd' -nf '#000000' -sf '#000000' -fn 'Xft:Liberation Sans:size=10'")
 
-          , ((mod, xK_s)                , submap $ defaultSublMap config)
+  -- xfce applications
+  , ((mod, xK_Escape)           , spawn "xfce4-popup-applicationsmenu")
+  , ((mod .|. shiftMask, xK_Escape), spawn "xfce4-popup-directorymenu")
 
-          , ((mod .|. controlMask, xK_h), sendMessage $ pullGroup L)
-          , ((mod .|. controlMask, xK_l), sendMessage $ pullGroup R)
-          , ((mod .|. controlMask, xK_k), sendMessage $ pullGroup U)
-          , ((mod .|. controlMask, xK_j), sendMessage $ pullGroup D)
+  -- These use boringWindows to skip over e.g. tabs when switching
+  , ((mod, xK_k)                , focusUp)
+  , ((mod, xK_j)                , focusDown)
 
-          , ((mod .|. controlMask, xK_m), withFocused (sendMessage . MergeAll))
-          , ((mod .|. controlMask, xK_u), withFocused (sendMessage . UnMerge))
-          ]
+  -- Submap for sublayouts (tabs)
+  , ((mod, xK_s)                , submap $ defaultSublMap config)
+
+  -- Merge and unmerge tabs
+  , ((mod .|. controlMask, xK_h), sendMessage $ pullGroup L)
+  , ((mod .|. controlMask, xK_l), sendMessage $ pullGroup R)
+  , ((mod .|. controlMask, xK_k), sendMessage $ pullGroup U)
+  , ((mod .|. controlMask, xK_j), sendMessage $ pullGroup D)
+
+  , ((mod .|. controlMask, xK_m), withFocused (sendMessage . MergeAll))
+  , ((mod .|. controlMask, xK_u), withFocused (sendMessage . UnMerge))
+  ]
 
 -- Uses the `ewmh` function for adding ewmh functionality
 myConfig = ewmh boilerPlateConfig {
