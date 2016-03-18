@@ -69,7 +69,13 @@ myManageHook =
 
 myStartupHook = do
   startupHook boilerPlateConfig
+  spawn "xfce4-panel"
+  -- spawn "xfce4-power-manager"
+  spawn "xfce4-volumed"
+  spawn "nm-applet"
+  spawn "pcmanfm --desktop"
   spawn "compton"
+  spawn "redshift-gtk -l 51.913799:4.468502 -t 6500:2500"
 
 myKeys config@(XConfig { modMask = mod }) = additionalKeys <> defaultKeys
   where defaultKeys = keys boilerPlateConfig $ config
