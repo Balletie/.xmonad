@@ -78,17 +78,21 @@ myStartupHook = do
   spawn "xsetroot -cursor_name left_ptr"
   spawn "redshift-gtk -l 51.913799:4.468502 -t 6500:2500"
 
+dmenu_args = " -b -nb '#cccccc' -sb '#dddddd'\
+             \ -nf '#000000' -sf '#000000'\
+             \ -fn 'Xft:Sans:size=10'"
+
 myKeys = additionalKeys <> keys boilerPlateConfig
 additionalKeys config@(XConfig { modMask = mod }) = M.fromList $
   [ ((noModMask, xK_Print)      , spawn "scrot -e 'mv $f ~/Desktop'")
   , ((controlMask, xK_F12)      , spawn "xmonad --recompile && xmonad --restart && tput bel")
 
   -- dmenu commands
-  , ((mod, xK_p)                , spawn "dmenu_run -p 'Run:' -nb '#cccccc' -sb '#dddddd' -nf '#000000' -sf '#000000' -fn 'Xft:Liberation Sans:size=10'")
-
-  -- xfce applications
-  , ((mod, xK_Escape)           , spawn "xfce4-popup-applicationsmenu")
-  , ((mod .|. shiftMask, xK_Escape), spawn "xfce4-popup-directorymenu")
+  , ((mod, xK_p)                , spawn dmenu_run)
+  , ((mod, xK_d)                , spawn $ dmenu_browse ++ " | xargs xdg-open")
+  , ((mod .|. shiftMask, xK_d)  , spawn $ dmenu_browse ++ " --ls -A | xargs xdg-open")
+  , ((mod, xK_f)                , spawn $ "printf '%s \"%s\"' $(dmenu_path | dmenu " ++ dmenu_args ++ ") \"$(" ++ dmenu_browse ++ ")\" | /bin/sh")
+  , ((mod .|. shiftMask, xK_f)  , spawn $ "printf '%s \"%s\"' $(dmenu_path | dmenu " ++ dmenu_args ++ ") \"$(" ++ dmenu_browse ++ " --ls -A)\" | /bin/sh")
 
   -- These use boringWindows to skip over e.g. tabs when switching
   , ((mod, xK_k)                , focusUp)
@@ -106,6 +110,8 @@ additionalKeys config@(XConfig { modMask = mod }) = M.fromList $
   , ((mod .|. controlMask, xK_m), withFocused (sendMessage . MergeAll))
   , ((mod .|. controlMask, xK_u), withFocused (sendMessage . UnMerge))
   ]
+  where dmenu_run = "dmenu_run -p 'Run:' " ++ dmenu_args
+        dmenu_browse = "/home/skip/.local/bin/dmenu_browse /home/skip --dm " ++ dmenu_args
 
 -- Uses the `ewmh` function for adding ewmh functionality
 myConfig = ewmh boilerPlateConfig {
