@@ -77,6 +77,11 @@ myLogHook = logHook boilerPlateConfig
   where opacity = 0.9
         pointerPos = (0.5, 0.5)
 
+myStartupHook = do
+  startupHook boilerPlateConfig
+  -- Set left pointer of root screen
+  spawn "xsetroot -cursor_name left_ptr"
+
 myEventHook =
      docksEventHook
   <> fullscreenEventHook
@@ -148,6 +153,7 @@ myConfig = ewmh boilerPlateConfig {
   , keys = myKeys
   , logHook = myLogHook
   , handleEventHook = myEventHook
+  , startupHook = myStartupHook
   , manageHook = myManageHook
   , layoutHook = myLayout
   , terminal = "urxvtc"
