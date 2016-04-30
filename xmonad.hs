@@ -1,3 +1,4 @@
+{-# LANGUAGE PatternGuards, ParallelListComp, DeriveDataTypeable, FlexibleInstances, FlexibleContexts, MultiParamTypeClasses, TypeSynonymInstances #-}
 import XMonad
 import qualified XMonad.StackSet as W
 import XMonad.Actions.UpdatePointer
@@ -9,9 +10,16 @@ import XMonad.Hooks.EwmhDesktops hiding (fullscreenEventHook)
 import XMonad.Hooks.ManageDocks
 import XMonad.Hooks.FadeInactive
 import XMonad.Hooks.ManageHelpers
+import XMonad.Layout.Decoration(Decoration, DefaultShrinker)
+import XMonad.Layout.LayoutModifier(LayoutModifier(handleMess, modifyLayout,
+                                    redoLayout),
+                                    ModifiedLayout(..))
 import XMonad.Layout.Spacing
 import XMonad.Layout.NoBorders
+import XMonad.Layout.Simplest(Simplest(..))
+import XMonad.Layout.SimpleDecoration
 import XMonad.Layout.Tabbed
+import XMonad.Layout.Tabbed(shrinkText, TabbedDecoration, addTabs)
 import XMonad.Layout.Fullscreen
 import XMonad.Layout.BoringWindows
 import XMonad.Layout.SubLayouts
@@ -26,12 +34,29 @@ main = do
 
 boilerPlateConfig = desktopConfig
 
-myTheme = theme smallClean
+myNormalBorderColor = "#E8E8E8"
+myFocusedBorderColor = "#FFCD07"
 
-myLayout = avoidStruts $ fullscreenFull $ windowNavigation $ subTabbed $ boringWindows
-         $ modifiedLayout ||| Full
+myTheme = (theme kavonFireTheme) {
+    fontName = "xft:Sans-9:bold"
+  , decoHeight = 20
+  , activeColor = "#FFDA4D"
+  , inactiveColor = "#EDEDED"
+  , activeBorderColor = myFocusedBorderColor
+  , inactiveBorderColor = myNormalBorderColor
+  , activeTextColor = "#000000"
+  , inactiveTextColor = "#515151"
+  }
+
+myThemedSubTabbed :: (Eq a, LayoutModifier (Sublayout Simplest) a, LayoutClass l a) =>
+    l a -> ModifiedLayout (Decoration TabbedDecoration DefaultShrinker)
+                          (ModifiedLayout (Sublayout Simplest) l) a
+myThemedSubTabbed x = addTabs shrinkText myTheme $ subLayout [] Simplest x
+
+myLayout = avoidStruts $ fullscreenFull $ windowNavigation $ myThemedSubTabbed
+         $ boringWindows $ modifiedLayout ||| Full
   where
-        modifiedLayout = smartBorders $ withBorder 2 $ smartSpacingWithEdge 4 $ layout
+        modifiedLayout = smartBorders $ withBorder 3 $ smartSpacingWithEdge 4 $ layout
         layout         = tiled ||| Mirror tiled
         -- default tiling algorithm partitions the screen into two panes
         tiled          = Tall nmaster delta ratio
@@ -106,8 +131,8 @@ additionalKeys config@(XConfig { modMask = mod }) = M.fromList $
 myConfig = ewmh boilerPlateConfig {
     workspaces = ["web", "mail-chat", "write", "dev"]
   , borderWidth = 2
-  , normalBorderColor = "#cccccc"
-  , focusedBorderColor = "#dddddd"
+  , normalBorderColor = myNormalBorderColor
+  , focusedBorderColor = myFocusedBorderColor
   , modMask = mod4Mask
   , keys = myKeys
   , logHook = myLogHook
