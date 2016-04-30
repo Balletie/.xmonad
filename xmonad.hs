@@ -10,6 +10,7 @@ import XMonad.Hooks.EwmhDesktops hiding (fullscreenEventHook)
 import XMonad.Hooks.ManageDocks
 import XMonad.Hooks.FadeInactive
 import XMonad.Hooks.ManageHelpers
+import XMonad.Hooks.UrgencyHook(withUrgencyHook)
 import XMonad.Layout.Decoration(Decoration, DefaultShrinker)
 import XMonad.Layout.LayoutModifier(LayoutModifier(handleMess, modifyLayout,
                                     redoLayout),
@@ -25,12 +26,15 @@ import XMonad.Layout.BoringWindows
 import XMonad.Layout.SubLayouts
 import XMonad.Layout.WindowNavigation
 import XMonad.Util.Themes
+
 import Data.Monoid
 import Data.Map as M hiding (keys)
 
+import LibNotifyUrgency (LibNotifyUrgencyHook(..))
+
 main :: IO()
-main = do
-  xmonad myConfig
+main = xmonad $ withUrgencyHook LibNotifyUrgencyHook
+     $ myConfig
 
 boilerPlateConfig = desktopConfig
 
@@ -104,7 +108,9 @@ dmenu_args = " -b -nb '#cccccc' -sb '#dddddd'\
 myKeys = additionalKeys <> keys boilerPlateConfig
 additionalKeys config@(XConfig { modMask = mod }) = M.fromList $
   [ ((noModMask, xK_Print)      , spawn "scrot -e 'mv $f ~/Desktop'")
-  , ((controlMask, xK_F12)      , spawn "xmonad --recompile && xmonad --restart && twmnc -i dialog-information -t Info -c \"XMonad recompiled and restarted\" || twmnc -i dialog-error -t Error -c \"XMonad failed to compile\"")
+  , ((controlMask, xK_F12)      , spawn "xmonad --recompile && xmonad --restart\
+    \ && twmnc -i dialog-information -t Info -c \"XMonad recompiled and restarted\"\
+    \ || twmnc -i dialog-error -t Error -c \"XMonad failed to compile\"")
 
   -- dmenu commands
   , ((mod, xK_p)                , spawn dmenu_run)
