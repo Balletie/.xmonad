@@ -81,16 +81,21 @@ myEventHook =
 isNotification :: Query Bool
 isNotification = isInProperty "_NET_WM_WINDOW_TYPE" "_NET_WM_WINDOW_TYPE_NOTIFICATION"
 
+isSplash :: Query Bool
+isSplash = isInProperty "_NET_WM_WINDOW_TYPE" "_NET_WM_WINDOW_TYPE_SPLASH"
+
 myManageHook =
      manageHook boilerPlateConfig
   <> fullscreenManageHook
   <> (className =? "Xfrun4" --> doFloat)
   -- TODO: Merge surf windows with tabbed group
   -- <> (className =? "Surf" --> )
+  <> (className =? "Eclipse" --> doShift "dev")
   <> (className =? "Firefox" --> doShift "web")
   <> (className =? "Emacs" --> doShift "write")
   <> (className =? "Claws-mail" --> doShift "mail-chat")
   <> (isNotification --> doIgnore)
+  <> (isSplash --> doFloat)
 
 dmenu_args = " -b -nb '#cccccc' -sb '#dddddd'\
              \ -nf '#000000' -sf '#000000'\
