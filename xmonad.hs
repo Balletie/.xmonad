@@ -104,7 +104,7 @@ dmenu_args = " -b -nb '#cccccc' -sb '#dddddd'\
 myKeys = additionalKeys <> keys boilerPlateConfig
 additionalKeys config@(XConfig { modMask = mod }) = M.fromList $
   [ ((noModMask, xK_Print)      , spawn "scrot -e 'mv $f ~/Desktop'")
-  , ((controlMask, xK_F12)      , spawn "xmonad --recompile && xmonad --restart && tput bel")
+  , ((controlMask, xK_F12)      , spawn "xmonad --recompile && xmonad --restart && twmnc -i dialog-information -t Info -c \"XMonad recompiled and restarted\" || twmnc -i dialog-error -t Error -c \"XMonad failed to compile\"")
 
   -- dmenu commands
   , ((mod, xK_p)                , spawn dmenu_run)
