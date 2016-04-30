@@ -67,27 +67,6 @@ myManageHook =
   <> (className =? "Claws-mail" --> doShift "mail-chat")
   <> (isNotification --> doIgnore)
 
-myStartupHook = do
-  startupHook boilerPlateConfig
-  -- Start caching dmenu_run entries in advance
-  spawn "dmenu_path"
-  -- Panel
-  spawn "tint2"
-  -- Brightness keys, automatically starts xfce4-notifyd if it's not running.
-  spawn "xfce4-power-manager"
-  -- Lockscreen
-  spawn "light-locker"
-  -- Volume keys, automatically starts xfce4-notifyd if it's not running.
-  spawn "xfce4-volumed"
-  -- NetworkManager applet
-  spawn "nm-applet"
-  -- Desktop background and desktop files
-  spawn "pcmanfm --desktop"
-  -- Set left pointer of root screen
-  spawn "xsetroot -cursor_name left_ptr"
-  -- Redshift, duh.
-  spawn "redshift-gtk -l 51.913799:4.468502 -t 6500:2500"
-
 dmenu_args = " -b -nb '#cccccc' -sb '#dddddd'\
              \ -nf '#000000' -sf '#000000'\
              \ -fn 'Xft:Sans:size=10'"
@@ -134,7 +113,6 @@ myConfig = ewmh boilerPlateConfig {
   , logHook = myLogHook
   , handleEventHook = myEventHook
   , manageHook = myManageHook
-  , startupHook = myStartupHook
   , layoutHook = myLayout
-  , terminal = "urxvt"
+  , terminal = "urxvtc"
   }
