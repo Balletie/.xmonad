@@ -58,7 +58,7 @@ myThemedSubTabbed :: (Eq a, LayoutModifier (Sublayout Simplest) a, LayoutClass l
 myThemedSubTabbed x = addTabs shrinkText myTheme $ subLayout [] Simplest x
 
 myLayout = avoidStruts $ fullscreenFull $ windowNavigation $ myThemedSubTabbed
-         $ boringWindows $ modifiedLayout ||| Full
+         $ boringWindows $ modifiedLayout ||| noBorders Full
   where
         modifiedLayout = smartBorders $ withBorder 3 $ smartSpacingWithEdge 4 $ layout
         layout         = tiled ||| Mirror tiled
