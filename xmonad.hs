@@ -16,11 +16,10 @@ import XMonad.Layout.LayoutModifier(LayoutModifier(handleMess, modifyLayout,
                                     redoLayout),
                                     ModifiedLayout(..))
 import XMonad.Layout.Spacing
+import XMonad.Layout.ImageButtonDecoration
 import XMonad.Layout.NoBorders
 import XMonad.Layout.Simplest(Simplest(..))
-import XMonad.Layout.SimpleDecoration
-import XMonad.Layout.Tabbed
-import XMonad.Layout.Tabbed(shrinkText, TabbedDecoration, addTabs)
+--import XMonad.Layout.Tabbed(shrinkText, TabbedDecoration, addTabs)
 import XMonad.Layout.Fullscreen
 import XMonad.Layout.BoringWindows
 import XMonad.Layout.SubLayouts
@@ -30,6 +29,8 @@ import XMonad.Util.Themes
 import Data.Monoid
 import Data.Map as M hiding (keys)
 
+import Tabbed
+import ImageButtonHandlerDecoration (addHandledButtonTabs)
 import LibNotifyUrgency (LibNotifyUrgencyHook(..))
 
 main :: IO()
@@ -41,21 +42,26 @@ boilerPlateConfig = desktopConfig
 myNormalBorderColor = "#E8E8E8"
 myFocusedBorderColor = "#FFCD07"
 
-myTheme = (theme kavonFireTheme) {
+myButtonedTheme = defaultThemeWithImageButtons {
     fontName = "xft:Sans-9:bold"
   , decoHeight = 20
   , activeColor = "#FFDA4D"
   , inactiveColor = "#EDEDED"
+  , urgentColor = activeColor myButtonedTheme
   , activeBorderColor = myFocusedBorderColor
   , inactiveBorderColor = myNormalBorderColor
+  , urgentBorderColor = activeBorderColor myButtonedTheme
   , activeTextColor = "#000000"
   , inactiveTextColor = "#515151"
+  , urgentTextColor = activeTextColor myButtonedTheme
   }
 
-myThemedSubTabbed :: (Eq a, LayoutModifier (Sublayout Simplest) a, LayoutClass l a) =>
-    l a -> ModifiedLayout (Decoration TabbedDecoration DefaultShrinker)
-                          (ModifiedLayout (Sublayout Simplest) l) a
-myThemedSubTabbed x = addTabs shrinkText myTheme $ subLayout [] Simplest x
+myTheme = myButtonedTheme {
+    windowTitleAddons = []
+  , windowTitleIcons  = []
+  }
+
+myThemedSubTabbed x = addHandledButtonTabs shrinkText myButtonedTheme $ subLayout [] Simplest x
 
 myLayout = avoidStruts $ fullscreenFull $ windowNavigation $ myThemedSubTabbed
          $ boringWindows $ modifiedLayout ||| noBorders Full
