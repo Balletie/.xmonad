@@ -106,9 +106,9 @@ myManageHook =
   <> (isNotification --> doIgnore)
   <> (isSplash --> doFloat)
 
-dmenu_args = " -b -nb '#cccccc' -sb '#dddddd'\
+dmenu_args = " -nb '#cccccc' -sb '#dddddd'\
              \ -nf '#000000' -sf '#000000'\
-             \ -fn 'Xft:Sans:size=10'"
+             \ -fn 'xft:Sans:size=9'"
 
 myKeys = additionalKeys <> keys boilerPlateConfig
 additionalKeys config@(XConfig { modMask = mod }) = M.fromList $
