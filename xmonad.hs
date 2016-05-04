@@ -19,7 +19,6 @@ import XMonad.Layout.Spacing
 import XMonad.Layout.ImageButtonDecoration
 import XMonad.Layout.NoBorders
 import XMonad.Layout.Simplest(Simplest(..))
---import XMonad.Layout.Tabbed(shrinkText, TabbedDecoration, addTabs)
 import XMonad.Layout.Fullscreen
 import XMonad.Layout.BoringWindows
 import XMonad.Layout.SubLayouts
@@ -39,7 +38,7 @@ main = xmonad $ withUrgencyHook LibNotifyUrgencyHook
 
 boilerPlateConfig = desktopConfig
 
-myNormalBorderColor = "#E8E8E8"
+myNormalBorderColor = "#BDBDBD"
 myFocusedBorderColor = "#FFCD07"
 
 myButtonedTheme = defaultThemeWithImageButtons {
