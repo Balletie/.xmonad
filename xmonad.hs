@@ -9,7 +9,7 @@ import XMonad.Hooks.DynamicLog
 import XMonad.Hooks.EwmhDesktops hiding (fullscreenEventHook)
 import XMonad.Hooks.ManageDocks
 import XMonad.Hooks.FadeInactive
-import XMonad.Hooks.ManageHelpers
+import XMonad.Hooks.SetWMName
 import XMonad.Hooks.UrgencyHook(withUrgencyHook)
 import XMonad.Layout.Decoration(Decoration, DefaultShrinker)
 import XMonad.Layout.LayoutModifier(LayoutModifier(handleMess, modifyLayout,
@@ -84,6 +84,8 @@ myLogHook = logHook boilerPlateConfig
 
 myStartupHook = do
   startupHook boilerPlateConfig
+  ewmhDesktopsStartup
+  setWMName "LG3D"
   -- Set left pointer of root screen
   spawn "xsetroot -cursor_name left_ptr"
 
