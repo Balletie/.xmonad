@@ -101,6 +101,7 @@ myManageHook =
   -- TODO: Merge surf windows with tabbed group
   -- <> (className =? "Surf" --> )
   <> (className =? "Eclipse" --> doShift "dev")
+  <> (className =? "Pharo" --> doShift "dev")
   <> (className =? "Firefox" --> doShift "web")
   <> (className =? "Emacs" --> doShift "write")
   <> (className =? "Claws-mail" --> doShift "mail-chat")
