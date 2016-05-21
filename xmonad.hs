@@ -1,7 +1,6 @@
 {-# LANGUAGE PatternGuards, ParallelListComp, DeriveDataTypeable, FlexibleInstances, FlexibleContexts, MultiParamTypeClasses, TypeSynonymInstances #-}
 import XMonad
 import qualified XMonad.StackSet as W
-import XMonad.Actions.UpdatePointer
 import XMonad.Actions.Submap
 import XMonad.Actions.WindowGo
 import XMonad.Config.Desktop
@@ -79,9 +78,7 @@ myLayout = avoidStruts $ fullscreenFull $ windowNavigation $ myThemedSubTabbed
 
 myLogHook = logHook boilerPlateConfig
          >> fadeInactiveLogHook opacity
-         >> updatePointer pointerPos (0, 0)
   where opacity = 0.9
-        pointerPos = (0.5, 0.5)
 
 myStartupHook = do
   startupHook boilerPlateConfig
