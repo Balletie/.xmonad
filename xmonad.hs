@@ -20,13 +20,14 @@ import XMonad.Layout.Fullscreen
 import XMonad.Layout.BoringWindows
 import XMonad.Layout.SubLayouts
 import XMonad.Layout.WindowNavigation
+import XMonad.Layout.WorkspaceDir (workspaceDir)
 
 import Data.Monoid
 import Data.Map as M hiding (keys)
 
 import ImageButtonHandlerDecoration (addHandledButtonTabs)
 import LibNotifyUrgency (LibNotifyUrgencyHook(..))
-import Prompts ( shellPrompt
+import Prompts ( changeDirPrompt, shellPrompt
                , openFilePrompt, openHiddenFilePrompt
                , execWithFilePrompt, execWithHiddenFilePrompt )
 import Tabbed
@@ -41,8 +42,8 @@ boilerPlateConfig = desktopConfig
 
 myThemedSubTabbed x = addHandledButtonTabs shrinkText myButtonedTheme $ subLayout [] Simplest x
 
-myLayout = avoidStruts $ fullscreenFull $ windowNavigation $ myThemedSubTabbed
-         $ boringWindows $ modifiedLayout ||| noBorders Full
+myLayout = workspaceDir "/home/skip/" $ avoidStruts $ fullscreenFull $ windowNavigation
+         $ myThemedSubTabbed $ boringWindows $ modifiedLayout ||| noBorders Full
   where
         modifiedLayout = smartBorders $ withBorder 3 $ smartSpacingWithEdge 4 $ layout
         layout         = tiled ||| Mirror tiled
@@ -98,6 +99,7 @@ additionalKeys config@(XConfig { modMask = mod }) = M.fromList $
   , ((mod .|. shiftMask, xK_d)  , openHiddenFilePrompt)
   , ((mod, xK_f)                , execWithFilePrompt)
   , ((mod .|. shiftMask, xK_f)  , execWithHiddenFilePrompt)
+  , ((mod .|. shiftMask, xK_x)  , changeDirPrompt)
 
   -- These use boringWindows to skip over e.g. tabs when switching
   , ((mod, xK_k)                , focusUp)

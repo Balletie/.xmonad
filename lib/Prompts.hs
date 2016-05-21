@@ -1,4 +1,4 @@
-module Prompts ( shellPrompt
+module Prompts ( changeDirPrompt, shellPrompt
                , openFilePrompt, openHiddenFilePrompt
                , execWithFilePrompt, execWithHiddenFilePrompt
                ) where
@@ -9,6 +9,7 @@ import XMonad.Prompt (XPPosition(..), XPConfig(..),
                       amberXPConfig, greenXPConfig,
                       defaultXPConfig)
 import qualified XMonad.Prompt.Shell as Shell (shellPrompt)
+import XMonad.Layout.WorkspaceDir (changeDir)
 import Themes (Theme (..), myTheme)
 
 myPromptConfig = defaultXPConfig {
@@ -21,6 +22,9 @@ myPromptConfig = defaultXPConfig {
   , borderColor = activeBorderColor myTheme
   , position = Top
   }
+
+changeDirPrompt :: X ()
+changeDirPrompt = changeDir myPromptConfig
 
 shellPrompt :: X ()
 shellPrompt = Shell.shellPrompt myPromptConfig
