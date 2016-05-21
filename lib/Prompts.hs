@@ -1,4 +1,4 @@
-module Prompts ( changeDirPrompt, Prompts.shellPrompt
+module Prompts ( changeDirPrompt, Prompts.shellPrompt, terminalPrompt
                , openFilePrompt , execWithFilePrompt
                ) where
 
@@ -37,6 +37,8 @@ openFilePrompt = runOrRaisePrompt myPromptConfig -- spawn $ dmenu_browse ++ " | 
 execWithFilePrompt :: X ()
 execWithFilePrompt = spawn $ "printf '%s \"%s\"' $(dmenu_path | dmenu " ++ dmenu_args ++ ") \"$(" ++ dmenu_browse ++ ")\" | /bin/sh"
 
+terminalPrompt :: X ()
+terminalPrompt = unsafePrompt "urxvtc -e" myPromptConfig
 
 -- dmenu_args :: [String]
 -- dmenu_args = split isSpace ...
