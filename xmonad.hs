@@ -35,8 +35,7 @@ import Themes (myNormalBorderColor, myFocusedBorderColor, myButtonedTheme)
 import Util (isNotification, isSplash, startsWith)
 
 main :: IO()
-main = xmonad $ withUrgencyHook LibNotifyUrgencyHook
-     $ myConfig
+main = xmonad $ myConfig
 
 boilerPlateConfig = desktopConfig
 
@@ -119,7 +118,8 @@ additionalKeys config@(XConfig { modMask = mod }) = M.fromList $
   ]
 
 -- Uses the `ewmh` function for adding ewmh functionality
-myConfig = ewmh boilerPlateConfig {
+myConfig = withUrgencyHook LibNotifyUrgencyHook
+         $ ewmh boilerPlateConfig {
     workspaces = ["web", "mail-chat", "write", "dev"]
   , borderWidth = 2
   , normalBorderColor = myNormalBorderColor
