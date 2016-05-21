@@ -28,9 +28,8 @@ import Data.Map as M hiding (keys)
 import ImageButtonHandlerDecoration (addHandledButtonTabs)
 import LibNotifyUrgency (LibNotifyUrgencyHook(..))
 import Prompts ( changeDirPrompt, shellPrompt
-               , openFilePrompt, openHiddenFilePrompt
-               , execWithFilePrompt, execWithHiddenFilePrompt )
-import Tabbed
+               , openFilePrompt , execWithFilePrompt )
+import Tabbed (shrinkText)
 import Themes (myNormalBorderColor, myFocusedBorderColor, myButtonedTheme)
 import Util (isNotification, isSplash, startsWith)
 
@@ -95,9 +94,7 @@ additionalKeys config@(XConfig { modMask = mod }) = M.fromList $
   -- Prompt keybindings
   , ((mod, xK_p)                , shellPrompt)
   , ((mod, xK_d)                , openFilePrompt)
-  , ((mod .|. shiftMask, xK_d)  , openHiddenFilePrompt)
   , ((mod, xK_f)                , execWithFilePrompt)
-  , ((mod .|. shiftMask, xK_f)  , execWithHiddenFilePrompt)
   , ((mod .|. shiftMask, xK_x)  , changeDirPrompt)
 
   -- These use boringWindows to skip over e.g. tabs when switching

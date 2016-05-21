@@ -1,15 +1,17 @@
-module Prompts ( changeDirPrompt, shellPrompt
-               , openFilePrompt, openHiddenFilePrompt
-               , execWithFilePrompt, execWithHiddenFilePrompt
+module Prompts ( changeDirPrompt, Prompts.shellPrompt
+               , openFilePrompt , execWithFilePrompt
                ) where
 
 import XMonad
 import XMonad.Core (spawn)
+
 import XMonad.Prompt (XPPosition(..), XPConfig(..),
                       amberXPConfig, greenXPConfig,
                       defaultXPConfig)
-import qualified XMonad.Prompt.Shell as Shell (shellPrompt)
 import XMonad.Layout.WorkspaceDir (changeDir)
+import XMonad.Prompt.Shell as Shell (shellPrompt, unsafePrompt)
+import XMonad.Prompt.RunOrRaise (runOrRaisePrompt)
+
 import Themes (Theme (..), myTheme)
 
 myPromptConfig = defaultXPConfig {
@@ -30,16 +32,11 @@ shellPrompt :: X ()
 shellPrompt = Shell.shellPrompt myPromptConfig
 
 openFilePrompt :: X ()
-openFilePrompt = spawn $ dmenu_browse ++ " | xargs xdg-open"
-
-openHiddenFilePrompt :: X ()
-openHiddenFilePrompt = spawn $ dmenu_browse ++ " --ls -A | xargs xdg-open"
+openFilePrompt = runOrRaisePrompt myPromptConfig -- spawn $ dmenu_browse ++ " | xargs xdg-open"
 
 execWithFilePrompt :: X ()
 execWithFilePrompt = spawn $ "printf '%s \"%s\"' $(dmenu_path | dmenu " ++ dmenu_args ++ ") \"$(" ++ dmenu_browse ++ ")\" | /bin/sh"
 
-execWithHiddenFilePrompt :: X ()
-execWithHiddenFilePrompt = spawn $ "printf '%s \"%s\"' $(dmenu_path | dmenu " ++ dmenu_args ++ ") \"$(" ++ dmenu_browse ++ " --ls -A)\" | /bin/sh"
 
 -- dmenu_args :: [String]
 -- dmenu_args = split isSpace ...
