@@ -10,26 +10,27 @@ import XMonad.Hooks.ManageDocks
 import XMonad.Hooks.FadeInactive
 import XMonad.Hooks.SetWMName
 import XMonad.Hooks.UrgencyHook(withUrgencyHook)
-import XMonad.Layout.Decoration(Decoration, DefaultShrinker)
 import XMonad.Layout.LayoutModifier(LayoutModifier(handleMess, modifyLayout,
                                     redoLayout),
                                     ModifiedLayout(..))
 import XMonad.Layout.Spacing
-import XMonad.Layout.ImageButtonDecoration
 import XMonad.Layout.NoBorders
 import XMonad.Layout.Simplest(Simplest(..))
 import XMonad.Layout.Fullscreen
 import XMonad.Layout.BoringWindows
 import XMonad.Layout.SubLayouts
 import XMonad.Layout.WindowNavigation
-import XMonad.Util.Themes
 
 import Data.Monoid
 import Data.Map as M hiding (keys)
 
-import Tabbed
 import ImageButtonHandlerDecoration (addHandledButtonTabs)
 import LibNotifyUrgency (LibNotifyUrgencyHook(..))
+import Prompts ( shellPrompt
+               , openFilePrompt, openHiddenFilePrompt
+               , execWithFilePrompt, execWithHiddenFilePrompt )
+import Tabbed
+import Themes (myNormalBorderColor, myFocusedBorderColor, myButtonedTheme)
 import Util (isNotification, isSplash, startsWith)
 
 main :: IO()
@@ -37,28 +38,6 @@ main = xmonad $ withUrgencyHook LibNotifyUrgencyHook
      $ myConfig
 
 boilerPlateConfig = desktopConfig
-
-myNormalBorderColor = "#BDBDBD"
-myFocusedBorderColor = "#FFCD07"
-
-myButtonedTheme = defaultThemeWithImageButtons {
-    fontName = "xft:Sans-9:bold"
-  , decoHeight = 20
-  , activeColor = "#FFDA4D"
-  , inactiveColor = "#EDEDED"
-  , urgentColor = activeColor myButtonedTheme
-  , activeBorderColor = myFocusedBorderColor
-  , inactiveBorderColor = myNormalBorderColor
-  , urgentBorderColor = activeBorderColor myButtonedTheme
-  , activeTextColor = "#000000"
-  , inactiveTextColor = "#515151"
-  , urgentTextColor = activeTextColor myButtonedTheme
-  }
-
-myTheme = myButtonedTheme {
-    windowTitleAddons = []
-  , windowTitleIcons  = []
-  }
 
 myThemedSubTabbed x = addHandledButtonTabs shrinkText myButtonedTheme $ subLayout [] Simplest x
 
@@ -106,10 +85,6 @@ myManageHook =
   <> (isNotification --> doIgnore)
   <> (isSplash --> doFloat)
 
-dmenu_args = " -nb '#cccccc' -sb '#dddddd'\
-             \ -nf '#000000' -sf '#000000'\
-             \ -fn 'xft:Sans:size=9'"
-
 myKeys = additionalKeys <> keys boilerPlateConfig
 additionalKeys config@(XConfig { modMask = mod }) = M.fromList $
   [ ((noModMask, xK_Print)      , spawn "scrot -e 'mv $f ~/Desktop'")
@@ -117,12 +92,12 @@ additionalKeys config@(XConfig { modMask = mod }) = M.fromList $
     \ && twmnc -i dialog-information -t Info -c \"XMonad recompiled and restarted\"\
     \ || twmnc -i dialog-error -t Error -c \"XMonad failed to compile\"")
 
-  -- dmenu commands
-  , ((mod, xK_p)                , spawn dmenu_run)
-  , ((mod, xK_d)                , spawn $ dmenu_browse ++ " | xargs xdg-open")
-  , ((mod .|. shiftMask, xK_d)  , spawn $ dmenu_browse ++ " --ls -A | xargs xdg-open")
-  , ((mod, xK_f)                , spawn $ "printf '%s \"%s\"' $(dmenu_path | dmenu " ++ dmenu_args ++ ") \"$(" ++ dmenu_browse ++ ")\" | /bin/sh")
-  , ((mod .|. shiftMask, xK_f)  , spawn $ "printf '%s \"%s\"' $(dmenu_path | dmenu " ++ dmenu_args ++ ") \"$(" ++ dmenu_browse ++ " --ls -A)\" | /bin/sh")
+  -- Prompt keybindings
+  , ((mod, xK_p)                , shellPrompt)
+  , ((mod, xK_d)                , openFilePrompt)
+  , ((mod .|. shiftMask, xK_d)  , openHiddenFilePrompt)
+  , ((mod, xK_f)                , execWithFilePrompt)
+  , ((mod .|. shiftMask, xK_f)  , execWithHiddenFilePrompt)
 
   -- These use boringWindows to skip over e.g. tabs when switching
   , ((mod, xK_k)                , focusUp)
@@ -140,8 +115,6 @@ additionalKeys config@(XConfig { modMask = mod }) = M.fromList $
   , ((mod .|. controlMask, xK_m), withFocused (sendMessage . MergeAll))
   , ((mod .|. controlMask, xK_u), withFocused (sendMessage . UnMerge))
   ]
-  where dmenu_run = "dmenu_run -p 'Run:' " ++ dmenu_args
-        dmenu_browse = "/home/skip/.local/bin/dmenu_browse /home/skip --dm " ++ dmenu_args
 
 -- Uses the `ewmh` function for adding ewmh functionality
 myConfig = ewmh boilerPlateConfig {
