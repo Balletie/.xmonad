@@ -20,7 +20,7 @@ import XMonad.Layout.Fullscreen
 import XMonad.Layout.BoringWindows
 import XMonad.Layout.SubLayouts
 import XMonad.Layout.WindowNavigation
-import XMonad.Layout.WorkspaceDir (workspaceDir)
+import CopyPasteMonad.Layout.WorkspaceDir (workspaceDir)
 
 import Data.Monoid
 import Data.Map as M hiding (keys)

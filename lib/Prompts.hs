@@ -8,10 +8,10 @@ import XMonad.Core (spawn)
 import XMonad.Prompt (XPPosition(..), XPConfig(..),
                       amberXPConfig, greenXPConfig,
                       defaultXPConfig)
-import XMonad.Layout.WorkspaceDir (changeDir)
 import XMonad.Prompt.Shell as Shell (shellPrompt, unsafePrompt)
 import XMonad.Prompt.RunOrRaise (runOrRaisePrompt)
 
+import CopyPasteMonad.Layout.WorkspaceDir (changeDir)
 import Themes (Theme (..), myTheme)
 
 myPromptConfig = defaultXPConfig {
