@@ -4,7 +4,7 @@
 
 Config {
     font = "xft:Dina:size=10",
-    additionalFonts = ["xft:NotoEmoji:size=10"],
+    additionalFonts = ["xft:FontAwesome:size=10"],
     bgColor = "black",
     fgColor = "grey",
     position = BottomP 0 100,
@@ -22,19 +22,19 @@ Config {
             "-h"         , "green",
             "-p"         , "yellow",
             -- discharging status
-            "-o"	, "<fc=orange><fn=1>🔋</fn></fc><left>%",
+            "-o"	, "<fc=orange><fn=1>\xf240</fn></fc> <left>%",
             -- AC "on" status
-            "-O"	, "<fc=yellow><fn=1>🔋</fn></fc><left>%",
+            "-O"	, "<fc=yellow><fn=1>\xf0e7</fn></fc> <left>%",
             -- charged status
-            "-i"	, "<fc=green><fn=1>🔋</fn><left>%</fc>",
+            "-i"	, "<fc=green><fn=1>\xf240</fn> <left>%</fc>",
             "-f"  , "ADP1/online"
             ] 5,
         Run Volume "default" "Master" [
             "-t", "<status> <volume>%",
             "-p"         , "3",
             "--",
-            "-o", "<fn=1>🔇</fn>",
-            "-O", "<fn=1>🔊</fn>"
+            "-o", "<fn=1>\xf026</fn>",
+            "-O", "<fn=1>\xf028</fn>"
             ] 1,
         Run Date "%a %_d %b %H:%M" "date" 10,
         Run StdinReader

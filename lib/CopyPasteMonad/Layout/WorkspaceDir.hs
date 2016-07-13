@@ -79,6 +79,8 @@ instance LayoutModifier WorkspaceDir Window where
                                                 return $ Just $ WorkspaceDir wd'
         | otherwise = return Nothing
 
+    modifierDescription (WorkspaceDir dir) = dir
+
 workspaceDir :: LayoutClass l a => String -> l a
              -> ModifiedLayout WorkspaceDir l a
 workspaceDir s = ModifiedLayout (WorkspaceDir s)

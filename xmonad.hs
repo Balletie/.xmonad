@@ -3,7 +3,6 @@ import XMonad
 import XMonad.Actions.Submap
 import XMonad.Actions.WindowGo
 import XMonad.Config.Desktop
-import XMonad.Hooks.DynamicLog (dynamicLogWithPP, xmobarPP, ppOutput, ppSep)
 import XMonad.Hooks.EwmhDesktops hiding (fullscreenEventHook)
 import XMonad.Hooks.ManageDocks
 import XMonad.Hooks.FadeInactive
@@ -23,6 +22,7 @@ import Prompts ( changeDirPrompt, shellPrompt, terminalPrompt
 import Layouts (myLayout)
 import Themes (myNormalBorderColor, myFocusedBorderColor, myButtonedTheme)
 import Util (isNotification, isSplash, startsWith)
+import XMobar (xmobarLogHook)
 
 main :: IO()
 main = do
@@ -99,7 +99,7 @@ additionalKeys config@(XConfig { modMask = mod }) = M.fromList $
 -- Uses the `ewmh` function for adding ewmh functionality
 myConfig = withUrgencyHook LibNotifyUrgencyHook
          $ ewmh boilerPlateConfig {
-    workspaces = ["web", "mail-chat", "write", "dev"]
+    workspaces = ["\xf269", "\xf086", "\xf040", "\xf121"]
   , borderWidth = 2
   , normalBorderColor = myNormalBorderColor
   , focusedBorderColor = myFocusedBorderColor
