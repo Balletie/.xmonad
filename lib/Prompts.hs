@@ -23,7 +23,6 @@ myPromptConfig = defaultXPConfig {
   , fgHLight = activeTextColor myTheme
   , borderColor = activeBorderColor myTheme
   , position = Top
-  , alwaysHighlight = True
   }
 
 changeDirPrompt :: X ()

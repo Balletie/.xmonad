@@ -41,7 +41,7 @@ directoryPrompt c prom = mkXPrompt (Dir prom) c getDirCompl
 
 getDirCompl :: String -> IO [String]
 getDirCompl s = (filter (notboring s) . lines) `fmap`
-                runProcessWithInput "/run/current-system/sw/bin/bash" [] ("compgen -A directory " ++ s ++ "\n")
+                runProcessWithInput "/run/current-system/sw/bin/bash" [] ("compgen -A directory \"" ++ s ++ "\"\n")
 
 -- Does not show hidden files, unless input starts with dot.
 notboring :: String -> String -> Bool
