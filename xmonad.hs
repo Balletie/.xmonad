@@ -1,6 +1,5 @@
 {-# LANGUAGE PatternGuards, ParallelListComp, DeriveDataTypeable, FlexibleInstances, FlexibleContexts, MultiParamTypeClasses, TypeSynonymInstances #-}
 import XMonad
-import qualified XMonad.StackSet as W
 import XMonad.Actions.Submap
 import XMonad.Actions.WindowGo
 import XMonad.Config.Desktop
@@ -10,27 +9,18 @@ import XMonad.Hooks.ManageDocks
 import XMonad.Hooks.FadeInactive
 import XMonad.Hooks.SetWMName
 import XMonad.Hooks.UrgencyHook(withUrgencyHook)
-import XMonad.Layout.LayoutModifier(LayoutModifier(handleMess, modifyLayout,
-                                    redoLayout),
-                                    ModifiedLayout(..))
-import XMonad.Layout.Spacing
-import XMonad.Layout.NoBorders
-import XMonad.Layout.Simplest(Simplest(..))
-import XMonad.Layout.Fullscreen
-import XMonad.Layout.BoringWindows
-import XMonad.Layout.SubLayouts
-import XMonad.Layout.WindowNavigation
-import XMonad.Util.Run (spawnPipe, hPutStrLn)
-import CopyPasteMonad.Layout.WorkspaceDir (workspaceDir)
+import XMonad.Layout.BoringWindows (focusUp, focusDown)
+import XMonad.Layout.Fullscreen (fullscreenEventHook, fullscreenManageHook)
+import XMonad.Layout.SubLayouts (GroupMsg(UnMerge, MergeAll), defaultSublMap, pullGroup)
+import XMonad.Util.Run (spawnPipe)
 
 import Data.Monoid
 import Data.Map as M hiding (keys)
 
-import ImageButtonHandlerDecoration (addHandledButtonTabs)
 import LibNotifyUrgency (LibNotifyUrgencyHook(..))
 import Prompts ( changeDirPrompt, shellPrompt, terminalPrompt
                , openFilePrompt , execWithFilePrompt )
-import Tabbed (shrinkText)
+import Layouts (myLayout)
 import Themes (myNormalBorderColor, myFocusedBorderColor, myButtonedTheme)
 import Util (isNotification, isSplash, startsWith)
 
@@ -40,29 +30,10 @@ main = do
   xmonad $ myConfig {
     logHook = do
       logHook myConfig
-      dynamicLogWithPP $ xmobarPP {
-        ppOutput = hPutStrLn xmobarproc,
-        ppSep = "      "
-      }
+      xmobarLogHook xmobarproc
   }
 
 boilerPlateConfig = desktopConfig
-
-myThemedSubTabbed x = addHandledButtonTabs shrinkText myButtonedTheme $ subLayout [] Simplest x
-
-myLayout = workspaceDir "/home/skip/" $ avoidStruts $ fullscreenFull $ windowNavigation
-         $ myThemedSubTabbed $ boringWindows $ modifiedLayout ||| noBorders Full
-  where
-        modifiedLayout = smartBorders $ withBorder 3 $ smartSpacingWithEdge 4 $ layout
-        layout         = tiled ||| Mirror tiled
-        -- default tiling algorithm partitions the screen into two panes
-        tiled          = Tall nmaster delta ratio
-        -- The default number of windows in the master pane
-        nmaster        = 1
-        -- Default proportion of screen occupied by master pane
-        ratio          = 1/2
-        -- Percent of screen to increment by when resizing panes
-        delta          = 3/100
 
 myLogHook = logHook boilerPlateConfig
          >> fadeInactiveLogHook opacity

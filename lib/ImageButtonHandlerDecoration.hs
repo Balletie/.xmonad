@@ -14,7 +14,7 @@ newtype ImageButtonHandler ds a = ImageButtonHandled { unHandleButtons :: ds a }
 handleButtons = ImageButtonHandled
 
 instance (Eq a, DecorationStyle ds a) => DecorationStyle (ImageButtonHandler ds) a where
-    describeDeco        = ( ++ "ImageButtonHandled") . (describeDeco . unHandleButtons)
+    describeDeco        = ( ++ " ImageButtonHandled") . (describeDeco . unHandleButtons)
     -- decorationEventHook = decorationEventHook . unHandleButtons
     pureDecoration      = pureDecoration . unHandleButtons
     shrink              = shrink . unHandleButtons
