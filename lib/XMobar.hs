@@ -2,7 +2,7 @@ module XMobar (xmobarLogHook) where
 
 import Control.Arrow ((>>>), (&&&), (***), first, second)
 import Data.Monoid ((<>), mappend)
-import Data.List (intercalate, isPrefixOf)
+import Data.List (intercalate, isPrefixOf, reverse)
 import System.FilePath (splitDirectories, joinPath)
 
 import XMonad.Util.Run (hPutStrLn)
@@ -14,7 +14,7 @@ xmobarLogHook xmobarproc = dynamicLogWithPP $ xmobarPP {
     ppOutput = hPutStrLn xmobarproc
   , ppLayout = words >>> head &&& (!! 1)
                >>> first shortenDir >>> withDirIcon *** toLayoutIcon
-               >>> tupleToList >>> separated
+               >>> tupleToList >>> reverse >>> separated
   , ppCurrent = currentColor . fontAwesome
   , ppHidden = hiddenColor . fontAwesome
   , ppHiddenNoWindows = fontAwesome
@@ -41,7 +41,9 @@ fontAwesome = wrap "<fn=1>" "</fn>"
 
 -- | Translates the layout string description to an icon.
 toLayoutIcon :: String -> String
-toLayoutIcon "Full" = fontAwesome "\xf096"
-toLayoutIcon "Hori" = fontAwesome "\xf096"
-toLayoutIcon "Vert" = fontAwesome "\xf096"
+toLayoutIcon "Full" = icon "layout_full"
+toLayoutIcon "Vert" = icon "layout_tall"
+toLayoutIcon "Hori" = icon "layout_mirror_tall"
 toLayoutIcon other = other
+
+icon = wrap "<icon=/home/skip/.xmonad/icons/" ".xbm/>"
