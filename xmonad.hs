@@ -4,7 +4,7 @@ import qualified XMonad.StackSet as W
 import XMonad.Actions.Submap
 import XMonad.Actions.WindowGo
 import XMonad.Config.Desktop
-import XMonad.Hooks.DynamicLog
+import XMonad.Hooks.DynamicLog (dynamicLogWithPP, xmobarPP, ppOutput, ppSep)
 import XMonad.Hooks.EwmhDesktops hiding (fullscreenEventHook)
 import XMonad.Hooks.ManageDocks
 import XMonad.Hooks.FadeInactive
@@ -20,6 +20,7 @@ import XMonad.Layout.Fullscreen
 import XMonad.Layout.BoringWindows
 import XMonad.Layout.SubLayouts
 import XMonad.Layout.WindowNavigation
+import XMonad.Util.Run (spawnPipe, hPutStrLn)
 import CopyPasteMonad.Layout.WorkspaceDir (workspaceDir)
 
 import Data.Monoid
@@ -34,7 +35,16 @@ import Themes (myNormalBorderColor, myFocusedBorderColor, myButtonedTheme)
 import Util (isNotification, isSplash, startsWith)
 
 main :: IO()
-main = xmonad $ myConfig
+main = do
+  xmobarproc <- spawnPipe "xmobar -d ~/.xmonad/xmobar.hs"
+  xmonad $ myConfig {
+    logHook = do
+      logHook myConfig
+      dynamicLogWithPP $ xmobarPP {
+        ppOutput = hPutStrLn xmobarproc,
+        ppSep = "      "
+      }
+  }
 
 boilerPlateConfig = desktopConfig
 
