@@ -8,20 +8,28 @@ import System.FilePath (splitDirectories, joinPath)
 import XMonad.Util.Run (hPutStrLn)
 import XMonad.Hooks.DynamicLog ( dynamicLogWithPP, xmobarPP, ppOutput, ppSep
                                , ppCurrent, ppHidden, ppHiddenNoWindows
-                               , ppLayout, xmobarColor, wrap)
+                               , ppUrgent, ppLayout, ppTitle, xmobarColor
+                               , wrap, shorten)
 
-xmobarLogHook xmobarproc = dynamicLogWithPP $ xmobarPP {
-    ppOutput = hPutStrLn xmobarproc
-  , ppLayout = words >>> head &&& (!! 1)
+-- Lol.
+myPP = xmobarPP {
+    ppLayout = words >>> head &&& (!! 1)
                >>> first shortenDir >>> withDirIcon *** toLayoutIcon
                >>> tupleToList >>> reverse >>> separated
+  , ppTitle = foregroundColor . shorten 40
   , ppCurrent = currentColor . fontAwesome
   , ppHidden = hiddenColor . fontAwesome
-  , ppHiddenNoWindows = fontAwesome
+  , ppHiddenNoWindows = foregroundColor . fontAwesome
+  , ppUrgent = urgentColor . fontAwesome
+  , ppSep = "       "
   }
   where withDirIcon = (" " ++) >>> mappend (yellowColor $ fontAwesome "\xf07c")
-        separated = intercalate $ ppSep xmobarPP
+        separated = intercalate $ ppSep myPP
         tupleToList (x, y) = [x, y]
+
+xmobarLogHook xmobarproc = dynamicLogWithPP $ myPP {
+    ppOutput = hPutStrLn xmobarproc
+  }
 
 shortenDir dir = joinPath $ shortened ++ [lastDir ++ "/"]
   where directories = splitDirectories replacedWithHomeDir
@@ -35,8 +43,11 @@ replaceHomeDir string | "/home/skip" `isPrefixOf` string = '~' : (drop 10 string
 
 currentColor = greenColor
 hiddenColor = yellowColor
-greenColor = xmobarColor "green" ""
-yellowColor = xmobarColor "yellow" ""
+urgentColor = redColor
+foregroundColor = xmobarColor "#d8d8d8" ""
+greenColor = xmobarColor "#a1b56c" ""
+yellowColor = xmobarColor "#f7ca88" ""
+redColor = xmobarColor "#ab4642" ""
 fontAwesome = wrap "<fn=1>" "</fn>"
 
 -- | Translates the layout string description to an icon.
