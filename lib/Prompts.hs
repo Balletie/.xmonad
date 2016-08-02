@@ -13,15 +13,16 @@ import XMonad.Prompt.RunOrRaise (runOrRaisePrompt)
 
 import CopyPasteMonad.Layout.WorkspaceDir (changeDir)
 import Themes (Theme (..), myTheme)
+import Colors
 
 myPromptConfig = defaultXPConfig {
     font = fontName myTheme
   , height = decoHeight myTheme
-  , bgColor = inactiveColor myTheme
-  , fgColor = inactiveTextColor myTheme
-  , bgHLight = activeColor myTheme
-  , fgHLight = activeTextColor myTheme
-  , borderColor = activeBorderColor myTheme
+  , bgColor = backgroundColor
+  , fgColor = foregroundColor
+  , bgHLight = backgroundColor
+  , fgHLight = focusedColor
+  , borderColor = backgroundColor
   , position = Top
   }
 

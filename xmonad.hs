@@ -20,7 +20,8 @@ import LibNotifyUrgency (LibNotifyUrgencyHook(..))
 import Prompts ( changeDirPrompt, shellPrompt, terminalPrompt
                , openFilePrompt , execWithFilePrompt )
 import Layouts (myLayout)
-import Themes (myNormalBorderColor, myFocusedBorderColor, myButtonedTheme)
+import Colors (focusedColor, normalColor)
+import Themes (myButtonedTheme)
 import Util (isNotification, isSplash, startsWith)
 import XMobar (xmobarLogHook)
 
@@ -100,9 +101,9 @@ additionalKeys config@(XConfig { modMask = mod }) = M.fromList $
 myConfig = withUrgencyHook LibNotifyUrgencyHook
          $ ewmh boilerPlateConfig {
     workspaces = ["\xf269", "\xf086", "\xf040", "\xf121"]
-  , borderWidth = 2
-  , normalBorderColor = myNormalBorderColor
-  , focusedBorderColor = myFocusedBorderColor
+  , borderWidth = 1
+  , normalBorderColor = normalColor
+  , focusedBorderColor = focusedColor
   , modMask = mod4Mask
   , keys = myKeys
   , logHook = myLogHook

@@ -11,6 +11,8 @@ import XMonad.Hooks.DynamicLog ( dynamicLogWithPP, xmobarPP, ppOutput, ppSep
                                , ppUrgent, ppLayout, ppTitle, xmobarColor
                                , wrap, shorten)
 
+import qualified Colors as C
+
 -- Lol.
 myPP = xmobarPP {
     ppLayout = words >>> head &&& (!! 1)
@@ -41,13 +43,13 @@ shortenDir dir = joinPath $ shortened ++ [lastDir ++ "/"]
 replaceHomeDir string | "/home/skip" `isPrefixOf` string = '~' : (drop 10 string)
                       | otherwise = string
 
-currentColor = greenColor
-hiddenColor = yellowColor
-urgentColor = redColor
-foregroundColor = xmobarColor "#d8d8d8" ""
-greenColor = xmobarColor "#a1b56c" ""
-yellowColor = xmobarColor "#f7ca88" ""
-redColor = xmobarColor "#ab4642" ""
+currentColor = xmobarColor C.focusedColor ""
+hiddenColor = xmobarColor C.hiddenColor ""
+urgentColor = xmobarColor C.urgentColor ""
+foregroundColor = xmobarColor C.normalColor ""
+greenColor = xmobarColor C.green ""
+yellowColor = xmobarColor C.yellow ""
+redColor = xmobarColor C.red ""
 fontAwesome = wrap "<fn=1>" "</fn>"
 
 -- | Translates the layout string description to an icon.
