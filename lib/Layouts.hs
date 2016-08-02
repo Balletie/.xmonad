@@ -8,13 +8,13 @@ import XMonad.Layout (Full(..), Mirror(..), Tall(..), (|||))
 import XMonad.Layout.LayoutModifier(LayoutModifier(handleMess, modifyLayout,
                                     redoLayout),
                                     ModifiedLayout(..))
-import XMonad.Layout.Spacing
-import XMonad.Layout.NoBorders
+import XMonad.Layout.Spacing (smartSpacingWithEdge)
+import XMonad.Layout.NoBorders (noBorders, smartBorders, withBorder)
 import XMonad.Layout.Simplest(Simplest(..))
-import XMonad.Layout.Fullscreen
+import XMonad.Layout.Fullscreen (fullscreenFull)
 import XMonad.Layout.BoringWindows (boringWindows)
-import XMonad.Layout.SubLayouts
-import XMonad.Layout.WindowNavigation
+import XMonad.Layout.SubLayouts (subLayout)
+import XMonad.Layout.WindowNavigation (windowNavigation)
 import XMonad.Layout.Renamed (renamed, Rename(Replace))
 
 import CopyPasteMonad.Layout.WorkspaceDir (workspaceDir)
@@ -47,4 +47,4 @@ tabbed l = myThemedSubTabbed $ boringWindows l
   where
         myThemedSubTabbed x = addHandledButtonTabs shrinkText myButtonedTheme $ subLayout [] Simplest x
 
-bordersAndSpacing l = smartBorders $ withBorder 3 $ smartSpacingWithEdge 4 l
+bordersAndSpacing l = smartBorders $ withBorder 1 $ smartSpacingWithEdge 1 l
