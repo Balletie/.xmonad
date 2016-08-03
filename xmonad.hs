@@ -17,8 +17,7 @@ import Data.Monoid
 import Data.Map as M hiding (keys)
 
 import LibNotifyUrgency (LibNotifyUrgencyHook(..))
-import Prompts ( changeDirPrompt, shellPrompt, terminalPrompt
-               , openFilePrompt , execWithFilePrompt )
+import Prompts ( changeDirPrompt, shellPrompt, terminalPrompt, openFilePrompt)
 import Layouts (myLayout)
 import Colors (focusedColor, normalColor)
 import Themes (myButtonedTheme)
@@ -77,8 +76,7 @@ additionalKeys config@(XConfig { modMask = mod }) = M.fromList $
   , ((mod, xK_p)                , shellPrompt)
   , ((mod .|. shiftMask, xK_p)  , terminalPrompt)
   , ((mod, xK_c)                , changeDirPrompt)
-  , ((mod, xK_d)                , openFilePrompt)
-  , ((mod, xK_f)                , execWithFilePrompt)
+  , ((mod, xK_f)                , openFilePrompt)
 
   -- These use boringWindows to skip over e.g. tabs when switching
   , ((mod, xK_k)                , focusUp)

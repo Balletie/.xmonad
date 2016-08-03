@@ -1,5 +1,5 @@
 module Prompts ( changeDirPrompt, Prompts.shellPrompt, terminalPrompt
-               , openFilePrompt , execWithFilePrompt
+               , openFilePrompt
                ) where
 
 import XMonad
@@ -40,22 +40,10 @@ shellPrompt :: X ()
 shellPrompt = shellPromptV2 myPromptConfig unsafeSpawn
 
 openFilePrompt :: X ()
-openFilePrompt = runOrRaisePrompt myPromptConfig -- spawn $ dmenu_browse ++ " | xargs xdg-open"
-
-execWithFilePrompt :: X ()
-execWithFilePrompt = unsafeSpawn $ "printf '%s \"%s\"' $(dmenu_path | dmenu " ++ dmenu_args ++ ") \"$(" ++ dmenu_browse ++ ")\" | /bin/sh"
+openFilePrompt = runOrRaisePrompt myPromptConfig
 
 terminalPrompt :: X ()
 terminalPrompt = shellPromptV2 myPromptConfig runInTerm
 
 runInTerm :: String -> X()
 runInTerm cmd = unsafeSpawn $ "urxvtc -e " ++ cmd
-
--- dmenu_args :: [String]
--- dmenu_args = split isSpace ...
-dmenu_args = " -nb '#cccccc' -sb '#dddddd'\
-             \ -nf '#000000' -sf '#000000'\
-             \ -fn 'xft:Sans:size=9'"
-
-dmenu_run = "dmenu_run -p 'Run:' " ++ dmenu_args
-dmenu_browse = "/home/skip/.local/bin/dmenu_browse /home/skip --dm " ++ dmenu_args
