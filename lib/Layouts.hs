@@ -29,9 +29,11 @@ myLayout = workspaceModifiers layout
 
 full = renamed [Replace "Full"] $ noBorders Full
 
-horizontal = renamed [Replace "Hori"] $ Mirror vertical
+horizontal = renamed [Replace "Hori"] $ tabbed $ Mirror vertical'
 
-vertical = renamed [Replace "Vert"] $ tabbed $ bordersAndSpacing $ Tall nmaster delta ratio
+vertical = renamed [Replace "Vert"] $ tabbed $ vertical'
+
+vertical' = bordersAndSpacing $ Tall nmaster delta ratio
   where
         -- The default number of windows in the master pane
         nmaster        = 1
