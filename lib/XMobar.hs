@@ -19,10 +19,10 @@ myPP = xmobarPP {
                >>> first shortenDir >>> withDirIcon *** toLayoutIcon
                >>> tupleToList >>> reverse >>> separated
   , ppTitle = foregroundColor . shorten 40
-  , ppCurrent = currentColor . fontAwesome
-  , ppHidden = hiddenColor . fontAwesome
-  , ppHiddenNoWindows = foregroundColor . fontAwesome
-  , ppUrgent = urgentColor . fontAwesome
+  , ppCurrent = currentColor . toWorkspaceIcon
+  , ppHidden = hiddenColor . toWorkspaceIcon
+  , ppHiddenNoWindows = foregroundColor . toWorkspaceIcon
+  , ppUrgent = urgentColor . toWorkspaceIcon
   , ppSep = "       "
   }
   where withDirIcon = (" " ++) >>> mappend (yellowColor $ fontAwesome "\xf07c")
@@ -58,5 +58,14 @@ toLayoutIcon "Full" = icon "layout_full"
 toLayoutIcon "Vert" = icon "layout_tall"
 toLayoutIcon "Hori" = icon "layout_mirror_tall"
 toLayoutIcon other = other
+
+-- | Translate the workspace identifier to an icon.
+toWorkspaceIcon :: String -> String
+toWorkspaceIcon = fontAwesome . iconForId
+  where iconForId "web"       = "\xf269" -- Firefox logo
+        iconForId "mail-chat" = "\xf086" -- Conversation icon
+        iconForId "write"     = "\xf040" -- Pencil icon
+        iconForId "dev"       = "\xf121" -- "</>" icon
+        iconForId _           = "\xf059" -- Question mark icon
 
 icon = wrap "<icon=/home/skip/.xmonad/icons/" ".xbm/>"

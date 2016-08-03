@@ -100,7 +100,7 @@ additionalKeys config@(XConfig { modMask = mod }) = M.fromList $
 -- Uses the `ewmh` function for adding ewmh functionality
 myConfig = withUrgencyHook LibNotifyUrgencyHook
          $ ewmh boilerPlateConfig {
-    workspaces = ["\xf269", "\xf086", "\xf040", "\xf121"]
+    workspaces = ["web", "mail-chat", "write", "dev"]
   , borderWidth = 1
   , normalBorderColor = normalColor
   , focusedBorderColor = focusedColor
