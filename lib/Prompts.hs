@@ -3,13 +3,14 @@ module Prompts ( changeDirPrompt, Prompts.shellPrompt, terminalPrompt
                ) where
 
 import XMonad
-import XMonad.Core (spawn)
 
 import XMonad.Prompt (XPPosition(..), XPConfig(..),
                       amberXPConfig, greenXPConfig,
-                      defaultXPConfig)
-import XMonad.Prompt.Shell as Shell (shellPrompt, unsafePrompt)
+                      defaultXPConfig, mkXPrompt)
+import XMonad.Prompt.Shell as Shell (shellPrompt, unsafePrompt
+                                    , getCommands, getShellCompl, Shell(..))
 import XMonad.Prompt.RunOrRaise (runOrRaisePrompt)
+import XMonad.Util.Run (unsafeSpawn)
 
 import CopyPasteMonad.Layout.WorkspaceDir (changeDir)
 import Themes (Theme (..), myTheme)
@@ -26,20 +27,29 @@ myPromptConfig = defaultXPConfig {
   , position = Top
   }
 
+-- | Super shell prompt which is (a bit) more general :).
+shellPromptV2 :: XPConfig -> (String -> X()) -> X ()
+shellPromptV2 c spawnFun = do
+    cmds <- io getCommands
+    mkXPrompt Shell c (getShellCompl cmds $ searchPredicate c) spawnFun
+
 changeDirPrompt :: X ()
 changeDirPrompt = changeDir myPromptConfig
 
 shellPrompt :: X ()
-shellPrompt = Shell.shellPrompt myPromptConfig
+shellPrompt = shellPromptV2 myPromptConfig unsafeSpawn
 
 openFilePrompt :: X ()
 openFilePrompt = runOrRaisePrompt myPromptConfig -- spawn $ dmenu_browse ++ " | xargs xdg-open"
 
 execWithFilePrompt :: X ()
-execWithFilePrompt = spawn $ "printf '%s \"%s\"' $(dmenu_path | dmenu " ++ dmenu_args ++ ") \"$(" ++ dmenu_browse ++ ")\" | /bin/sh"
+execWithFilePrompt = unsafeSpawn $ "printf '%s \"%s\"' $(dmenu_path | dmenu " ++ dmenu_args ++ ") \"$(" ++ dmenu_browse ++ ")\" | /bin/sh"
 
 terminalPrompt :: X ()
-terminalPrompt = unsafePrompt "urxvtc -e" myPromptConfig
+terminalPrompt = shellPromptV2 myPromptConfig runInTerm
+
+runInTerm :: String -> X()
+runInTerm cmd = unsafeSpawn $ "urxvtc -e " ++ cmd
 
 -- dmenu_args :: [String]
 -- dmenu_args = split isSpace ...
