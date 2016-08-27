@@ -15,8 +15,11 @@ import qualified Colors as C
 
 -- Lol.
 myPP = xmobarPP {
-    ppLayout = words >>> head &&& (!! 1)
-               >>> first shortenDir >>> withDirIcon *** toLayoutIcon
+    ppLayout = words
+               >>> head                  &&& (!! 1)
+               >>> first shortenDir
+               >>> withDirIcon           *** toLayoutIcon
+               >>> openFileManagerAction *** switchLayoutAction
                >>> tupleToList >>> reverse >>> separated
   , ppTitle = foregroundColor . shorten 40 . xmobarStrip
   , ppCurrent = currentColor . formatWorkspace
@@ -33,6 +36,8 @@ xmobarLogHook xmobarproc = dynamicLogWithPP $ myPP {
     ppOutput = hPutStrLn xmobarproc
   }
 
+-- | Shortens the intermediate directories to only the first letter of their
+-- name. Example: `/home/skip/Pictures/foo` becomes `~/P/foo/`.
 shortenDir dir = joinPath $ shortened ++ [lastDir ++ "/"]
   where directories = splitDirectories replacedWithHomeDir
         replacedWithHomeDir = replaceHomeDir dir
@@ -76,8 +81,11 @@ toSwitchAction "write"     = switchAction 3
 toSwitchAction "dev"       = switchAction 4
 toSwitchAction x           = \_ -> x
 
-switchAction i = wrap (wrap "<action=xdotool key super+" " button=1>" $ show i)
+switchAction i = wrap (wrap "<action=`xdotool key super+" "` button=1>" $ show i)
                       "</action>"
+
+openFileManagerAction = wrap "<action=`pcmanfm` button=1>" "</action>"
+switchLayoutAction = wrap "<action=`xdotool key super+space` button=1>" "</action>"
 
 formatWorkspace :: String -> String
 formatWorkspace = toSwitchAction &&& toWorkspaceIcon >>> uncurry ($)
