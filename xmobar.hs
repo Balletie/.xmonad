@@ -48,11 +48,16 @@ Config {
             "-o", "<fn=1>\xf026</fn>",
             "-O", "<fn=1>\xf028</fn>"
             ] 1,
+        Run Brightness [
+            "-t", "<fc=#a1b56c><fn=1>\xf185</fn></fc> <percent>%",
+            "--",
+            "-D", "gmux_backlight"
+            ] 1,
         Run Date "%a %_d %b %H:%M" "date" 10,
         Run StdinReader
     ],
     sepChar = "%",
     alignSep = "}{",
-    template = "  %StdinReader% } %date% { %default:Master% %battery% "
+    template = "  %StdinReader% } %date% { %bright% %default:Master% %battery% "
 }
 
