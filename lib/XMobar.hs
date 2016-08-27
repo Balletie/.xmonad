@@ -9,7 +9,7 @@ import XMonad.Util.Run (hPutStrLn)
 import XMonad.Hooks.DynamicLog ( dynamicLogWithPP, xmobarPP, ppOutput, ppSep
                                , ppCurrent, ppHidden, ppHiddenNoWindows
                                , ppUrgent, ppLayout, ppTitle, xmobarColor
-                               , wrap, shorten)
+                               , wrap, shorten, xmobarStrip)
 
 import qualified Colors as C
 
@@ -18,11 +18,11 @@ myPP = xmobarPP {
     ppLayout = words >>> head &&& (!! 1)
                >>> first shortenDir >>> withDirIcon *** toLayoutIcon
                >>> tupleToList >>> reverse >>> separated
-  , ppTitle = foregroundColor . shorten 40
-  , ppCurrent = currentColor . toWorkspaceIcon
-  , ppHidden = hiddenColor . toWorkspaceIcon
-  , ppHiddenNoWindows = foregroundColor . toWorkspaceIcon
-  , ppUrgent = urgentColor . toWorkspaceIcon
+  , ppTitle = foregroundColor . shorten 40 . xmobarStrip
+  , ppCurrent = currentColor . formatWorkspace
+  , ppHidden = hiddenColor . formatWorkspace
+  , ppHiddenNoWindows = foregroundColor . formatWorkspace
+  , ppUrgent = urgentColor . formatWorkspace
   , ppSep = "       "
   }
   where withDirIcon = (" " ++) >>> mappend (yellowColor $ fontAwesome "\xf07c")
@@ -67,5 +67,19 @@ toWorkspaceIcon = fontAwesome . iconForId
         iconForId "write"     = "\xf040" -- Pencil icon
         iconForId "dev"       = "\xf121" -- "</>" icon
         iconForId _           = "\xf059" -- Question mark icon
+
+-- | Translate the workspace identifier to a switch action
+toSwitchAction :: String -> String -> String
+toSwitchAction "web"       = switchAction 1
+toSwitchAction "mail-chat" = switchAction 2
+toSwitchAction "write"     = switchAction 3
+toSwitchAction "dev"       = switchAction 4
+toSwitchAction x           = \_ -> x
+
+switchAction i = wrap (wrap "<action=xdotool key super+" " button=1>" $ show i)
+                      "</action>"
+
+formatWorkspace :: String -> String
+formatWorkspace = toSwitchAction &&& toWorkspaceIcon >>> uncurry ($)
 
 icon = wrap "<icon=/home/skip/.xmonad/icons/" ".xbm/>"

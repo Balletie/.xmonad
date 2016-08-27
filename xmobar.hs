@@ -54,10 +54,10 @@ Config {
             "-D", "gmux_backlight"
             ] 1,
         Run Date "%a %_d %b %H:%M" "date" 10,
-        Run StdinReader
+        Run UnsafeStdinReader
     ],
     sepChar = "%",
     alignSep = "}{",
-    template = "  %StdinReader% } %date% { %bright% %default:Master% %battery% "
+    template = "  %UnsafeStdinReader% } %date% { %bright% %default:Master% %battery% "
 }
 
