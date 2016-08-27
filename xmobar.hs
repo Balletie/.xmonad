@@ -36,7 +36,7 @@ Config {
             -- AC "on" status
             "-O"	, "<fc=#f7ca88><fn=1>\xf0e7</fn></fc> <left>%",
             -- charged status
-            "-i"	, "<fc=#a1b56c><fn=1>\xf240</fn></fc> <left>%",
+            "-i"	, "<fc=#a1b56c><fn=1>\xf1e6</fn></fc> <left>%",
             "-f"  , "ADP1/online"
             ] 5,
         Run Volume "default" "Master" [
