@@ -45,6 +45,9 @@ myStartupHook = do
   setWMName "LG3D"
   -- Set left pointer of root screen
   spawn "xsetroot -cursor_name left_ptr"
+  spawn "stalonetray"
+  -- Hack: raise the tray so that it is always on top of xmobar.
+  spawn "xdotool search --class stalonetray windowraise"
 
 myEventHook =
      docksEventHook

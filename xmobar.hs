@@ -15,7 +15,7 @@ Config {
     bgColor = "#181818",
     fgColor = "#d8d8d8",
     alpha = 255,
-    position = BottomP 0 100,
+    position = Bottom,
     commands = [
         -- battery monitor
         Run BatteryP [ "BAT0" ] [
@@ -54,10 +54,11 @@ Config {
             "-D", "gmux_backlight"
             ] 1,
         Run Date "%a %_d %b %H:%M" "date" 10,
-        Run UnsafeStdinReader
+        Run UnsafeStdinReader,
+        Run Com "/home/skip/.xmonad/stalonetray-padding-icon.sh" [] "stalonetraypad" 10
     ],
     sepChar = "%",
     alignSep = "}{",
-    template = "  %UnsafeStdinReader% } %date% { %bright% %default:Master% %battery% "
+    template = "  %UnsafeStdinReader% } %date% { %bright% %default:Master% %battery% %stalonetraypad%"
 }
 
