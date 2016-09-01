@@ -6,10 +6,10 @@ import Data.List (intercalate, isPrefixOf, reverse)
 import System.FilePath (splitDirectories, joinPath)
 
 import XMonad.Util.Run (hPutStrLn)
-import XMonad.Hooks.DynamicLog ( dynamicLogWithPP, xmobarPP, ppOutput, ppSep
+import XMonad.Hooks.DynamicLog ( dynamicLogString, xmobarPP, ppOutput, ppSep
                                , ppCurrent, ppHidden, ppHiddenNoWindows
                                , ppUrgent, ppLayout, ppTitle, xmobarColor
-                               , wrap, shorten, xmobarStrip)
+                               , wrap, shorten, xmobarStrip, xmonadPropLog)
 
 import qualified Colors as C
 
@@ -32,9 +32,7 @@ myPP = xmobarPP {
         separated = intercalate $ ppSep myPP
         tupleToList (x, y) = [x, y]
 
-xmobarLogHook xmobarproc = dynamicLogWithPP $ myPP {
-    ppOutput = hPutStrLn xmobarproc
-  }
+xmobarLogHook = dynamicLogString myPP >>= xmonadPropLog
 
 -- | Shortens the intermediate directories to only the first letter of their
 -- name. Example: `/home/skip/Pictures/foo` becomes `~/P/foo/`.

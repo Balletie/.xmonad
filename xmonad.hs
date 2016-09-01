@@ -26,11 +26,11 @@ import XMobar (xmobarLogHook)
 
 main :: IO()
 main = do
-  xmobarproc <- spawnPipe "xmobar -d ~/.xmonad/xmobar.hs"
+  spawn "xmobar -d ~/.xmonad/xmobar.hs"
   xmonad $ myConfig {
     logHook = do
       logHook myConfig
-      xmobarLogHook xmobarproc
+      xmobarLogHook
   }
 
 boilerPlateConfig = desktopConfig
