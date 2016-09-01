@@ -46,8 +46,8 @@ myStartupHook = do
   -- Set left pointer of root screen
   spawn "xsetroot -cursor_name left_ptr"
   spawn "stalonetray"
-  -- Hack: raise the tray so that it is always on top of xmobar.
-  spawn "xdotool search --class stalonetray windowraise"
+  -- Hack: raise the tray once xmobar is visible.
+  spawn "xdotool search --onlyvisible --sync --classname xmobar search --classname stalonetray windowraise"
 
 myEventHook =
      docksEventHook
