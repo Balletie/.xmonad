@@ -3,7 +3,7 @@
 -- http://github.com/vicfryzel/xmonad-config
 -- Colors
 --   bg:     #181818
---   fg:     #e8e8e8
+--   fg:     #d8d8d8
 --   red:    #ab4642
 --   yellow: #f7ca88
 --   orange: #dc9656
@@ -15,7 +15,7 @@ Config {
     bgColor = "#181818",
     fgColor = "#d8d8d8",
     alpha = 255,
-    position = Bottom,
+    position = Top,
     lowerOnStart = True,
     commands = [
         -- battery monitor
@@ -54,12 +54,19 @@ Config {
             "--",
             "-D", "gmux_backlight"
             ] 1,
-        Run Date "%a %_d %b %H:%M" "date" 10,
+        Run Com "/bin/sh" ["-c", "DaySuffix() {
+  case `date +%d` in
+    1|21|31) echo \"st\";;
+    2|22)    echo \"nd\";;
+    3|23)    echo \"rd\";;
+    *)       echo \"th\";;
+  esac
+}; date \"+%A, %b %-d`DaySuffix` %H:%M\""] "mydate" 10,
         Run UnsafeXMonadLog,
         Run Com "/home/skip/.xmonad/stalonetray-padding-icon.sh" [] "stalonetraypad" 10
     ],
     sepChar = "%",
     alignSep = "}{",
-    template = "  %UnsafeXMonadLog% } %date% { %bright% %default:Master% %battery% %stalonetraypad%"
+    template = "  %UnsafeXMonadLog% } <action=`/home/skip/.local/bin/cal-display` button=1> %mydate% </action> { %bright% %default:Master% %battery% %stalonetraypad%"
 }
 
