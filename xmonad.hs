@@ -11,7 +11,7 @@ import XMonad.Hooks.UrgencyHook(withUrgencyHook)
 import XMonad.Layout.BoringWindows (focusUp, focusDown)
 import XMonad.Layout.Fullscreen (fullscreenEventHook, fullscreenManageHook)
 import XMonad.Layout.SubLayouts (GroupMsg(UnMerge, MergeAll), defaultSublMap, pullGroup)
-import XMonad.Util.Run (spawnPipe)
+import XMonad.Util.Run (safeSpawn)
 
 import Data.Monoid
 import Data.Map as M hiding (keys)
@@ -47,6 +47,8 @@ myStartupHook = do
   spawn "xsetroot -cursor_name left_ptr"
   -- Hack: execute tray once xmobar is visible.
   spawn "xdotool search --onlyvisible --sync --classname xmobar exec stalonetray"
+  -- Generate background
+  safeSpawn "/home/skip/.local/bin/gen-fractal-bg" []
 
 myEventHook =
      docksEventHook
