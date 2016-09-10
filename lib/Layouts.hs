@@ -29,9 +29,9 @@ myLayout = workspaceModifiers layout
 
 full = renamed [Replace "Full"] $ noBorders Full
 
-horizontal = renamed [Replace "Hori"] $ tabbed $ Mirror vertical'
+horizontal = renamed [Replace "Hori"] $ Mirror vertical'
 
-vertical = renamed [Replace "Vert"] $ tabbed $ vertical'
+vertical = renamed [Replace "Vert"] $ vertical'
 
 vertical' = bordersAndSpacing $ Tall nmaster delta ratio
   where
@@ -43,7 +43,7 @@ vertical' = bordersAndSpacing $ Tall nmaster delta ratio
         delta          = 3/100
 
 workspaceModifiers l = workspaceDir "/home/skip/" $ avoidStruts $ fullscreenFull
-                     $ windowNavigation l
+                     $ windowNavigation $ tabbed l
 
 tabbed l = myThemedSubTabbed $ boringWindows l
   where

@@ -152,8 +152,7 @@ data TabbarShown = Always | WhenPlural deriving (Read, Show, Eq)
 data TabbedDecoration a = Tabbed TabbarLocation TabbarShown deriving (Read, Show)
 
 instance Eq a => DecorationStyle TabbedDecoration a where
-    describeDeco (Tabbed Top _ ) = "Tabbed"
-    describeDeco (Tabbed Bottom _ ) = "Tabbed Bottom"
+    describeDeco = const ""
     decorationEventHook _ ds ButtonEvent { ev_window     = ew
                                          , ev_event_type = et
                                          , ev_button     = eb }
