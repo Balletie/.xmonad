@@ -1,11 +1,14 @@
 module XMobar (xmobarLogHook) where
 
 import Control.Arrow ((>>>), (&&&), (***), first, second)
+import Control.Monad.State (gets)
 import Data.Monoid ((<>), mappend)
 import Data.List (intercalate, isPrefixOf, reverse)
 import System.FilePath (splitDirectories, joinPath)
 
-import XMonad.Util.Run (hPutStrLn)
+import XMonad.Core (spawn, windowset, X)
+import XMonad.StackSet (peek)
+import XMonad.Util.Run (runProcessWithInput)
 import XMonad.Hooks.DynamicLog ( dynamicLogString, xmobarPP, ppOutput, ppSep
                                , ppCurrent, ppHidden, ppHiddenNoWindows
                                , ppUrgent, ppLayout, ppTitle, xmobarColor
@@ -32,7 +35,21 @@ myPP = xmobarPP {
         separated = intercalate $ ppSep myPP
         tupleToList (x, y) = [x, y]
 
-xmobarLogHook = dynamicLogString myPP >>= xmonadPropLog
+xmobarLogHook = do
+  xid <- currentWindowId
+  let fmt = windowIconPathFormat
+  path <- runProcessWithInput "/home/skip/.local/bin/window_xpm_icon" [ fmt, xid ] ""
+  let withWindowIcon = ((iconFromPath $ init path)  ++) . (ppTitle myPP)
+  dynamicLogString myPP { ppTitle = withWindowIcon } >>= xmonadPropLog
+
+windowIconPathFormat :: String
+windowIconPathFormat = toIconPath ("window_icon_%s")
+
+currentWindowId :: X String
+currentWindowId = do
+  ws <- gets windowset
+  let xid = maybe "" show $ peek ws
+  return xid
 
 -- | Shortens the intermediate directories to only the first letter of their
 -- name. Example: `/home/skip/Pictures/foo` becomes `~/P/foo/`.
@@ -88,4 +105,7 @@ switchLayoutAction = wrap "<action=`xdotool key super+space` button=1>" "</actio
 formatWorkspace :: String -> String
 formatWorkspace = toSwitchAction &&& toWorkspaceIcon >>> uncurry ($)
 
-icon = wrap "<icon=/home/skip/.xmonad/icons/" ".xbm/>"
+icon = iconFromPath . toIconPath
+iconFromPath = wrap "<icon=" "/>"
+
+toIconPath = wrap "/home/skip/.xmonad/icons/" ".xpm"
